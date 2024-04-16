@@ -1,36 +1,27 @@
 import { StatusBar } from 'expo-status-bar';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, TextComponent, View } from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+import Home from './screens/Home';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-
-  const [recipes, setRecipes] = useState([]);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData= async () => {
-    try {
-      const response = await axios.get('http://10.0.2.2:9001/api/posts/all'); // change local host with this 10.0.2.2
-      setRecipes(response.data);
-    } catch(error) {
-      console.error('Error fetching data:' , error);
-    }
-  };
-
-
-
-
-
+  
   return (
-    <View>
-    
-      {recipes.map(item => (
-        <Text key={item.id}>{item.name}</Text>
-      ))}
-    </View>
+  <NavigationContainer>
+  <Stack.Navigator>
+  <Stack.Screen name="Home" component={Home} />
+ 
+
+  </Stack.Navigator>
+  </NavigationContainer>
+
+   
+   
   );
 }
 
@@ -41,4 +32,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  homeContainer: {
+    flex:1,
+    backgroundColor: "cornsilk",    
+},
+
 });
