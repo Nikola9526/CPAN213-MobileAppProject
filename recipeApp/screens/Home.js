@@ -1,4 +1,4 @@
-import { Button, FlatList, StyleSheet, Text, TextComponent, View } from 'react-native';
+import { Button, FlatList, ScrollView, StyleSheet, Text, TextComponent, View } from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -12,14 +12,21 @@ const Recipe = (props) => (
 
 const renderRecipe = ({ item }) => <Recipe name={item.name} description={item.description}/>;
 
-
-
-
-
 function Home () {
     const [recipes, setRecipes] = useState([]);
 
-  useEffect(() => {
+
+
+    useEffect(() => {
+      fetch('http://10.0.2.2:9001/api/posts/all')
+      .then(response => response.json())
+      .then(data => setRecipes(data))
+      .catch(error => console.error("Error fetching the recipes:", error));
+  
+  }, []);
+
+
+  /*useEffect(() => {
     fetchData();
   }, []);
 
@@ -30,12 +37,13 @@ function Home () {
     } catch(error) {
       console.error('Error fetching data:' , error);
     }
-  };
+  };*/
   
 
 
     return (
         <View style={styles.container}>
+       
         <FlatList
         style={styles.employeeList}
        data={recipes}
@@ -43,6 +51,9 @@ function Home () {
        keyExtractor={(item) => item.id}
        
        />
+
+       
+       
        
        <View style={{ margin: 30}}>
        <Button  title='AddRecipe' />
@@ -70,9 +81,9 @@ const styles = StyleSheet.create({
   employeeList: {
     alignContent:"stretch",
     width:"100%",
-    flexDirection: 'row'
+    
   },
-  item:{borderWidth:1,padding:10,margin:5,borderRadius:5,backgroundColor:"pink",}, 
+  item:{borderWidth:1,padding:10,margin:5,borderRadius:5,backgroundColor:"green",}, 
   itemText:{color:"white"}
 
 
