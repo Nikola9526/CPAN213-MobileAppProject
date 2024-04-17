@@ -1,7 +1,6 @@
 import { Button, FlatList, ScrollView, StyleSheet, Text, TextComponent, View, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
 
-
 function Login () {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
