@@ -4,16 +4,16 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppLoading from 'expo-app-loading';
+//Color scheme/
+import { Colors } from './constants/styles';
 
 import LoginScreen from './screens/LoginScreen';
-import SignupScreen from './screens/SignupScreen';
-import WelcomeScreen from './screens/WelcomeScreen';
-import { Colors } from './constants/styles';
+import RegisterScreen from './screens/RegisterScreen';
+import HomeScreen from './screens/HomeScreen';
+import AddRecipe from './screens/addRecipe';
+
 import AuthContextProvider, { AuthContext } from './store/auth-context';
 import IconButton from './components/ui/IconButton';
-
-//import Home from './screens/Home';
-//import Login from './screens/LoginScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,28 +23,30 @@ function AuthStack() {
       screenOptions={{
         headerStyle: { backgroundColor: Colors.primary500 },
         headerTintColor: 'white',
-        contentStyle: { backgroundColor: Colors.primary100 },
+        contentStyle: { image:"", backgroundColor: Colors.primary100 },
       }}
     >
       <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Signup" component={SignupScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
     </Stack.Navigator>
   );
 }
 
 function AuthenticatedStack() {
+  // get authContext.
   const authCtx = useContext(AuthContext);
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: { backgroundColor: Colors.primary500 },
         headerTintColor: 'white',
         contentStyle: { backgroundColor: Colors.primary100 },
-      }}
-    >
+      }}>
+
       <Stack.Screen
-        name="Welcome"
-        component={WelcomeScreen}
+        name="Home"
+        component={HomeScreen}
         options={{
           headerRight: ({ tintColor }) => (
             <IconButton
@@ -53,9 +55,28 @@ function AuthenticatedStack() {
               size={24}
               onPress={authCtx.logout}
             />
+            
           ),
         }}
       />
+       <Stack.Screen
+        name="AddRecipe"
+        component={AddRecipe}
+        options={{
+          headerRight: ({ tintColor }) => (
+            <IconButton
+              icon="exit"
+              color={tintColor}
+              size={24}
+              onPress={authCtx.logout}
+            />
+            
+          ),
+        }}
+      />
+
+
+      
     </Stack.Navigator>
   );
 }
@@ -72,19 +93,18 @@ function Navigation() {
 }
 
 function Root() {
+  
+  const authCtx = useContext(AuthContext);
   const [isTryingLogin, setIsTryingLogin] = useState(true);
 
-  const authCtx = useContext(AuthContext);
-
   useEffect(() => {
+    
     async function fetchToken() {
       const storedToken = await AsyncStorage.getItem('token');
-
       if (storedToken) {
         authCtx.authenticate(storedToken);
       }
-
-      setIsTryingLogin(false);
+       setIsTryingLogin(false);
     }
 
     fetchToken();
@@ -93,22 +113,18 @@ function Root() {
   if (isTryingLogin) {
     return <AppLoading />;
   }
-
   return <Navigation />;
 }
-
-
 
 export default function App() {
   
   return (
     <>
-    <StatusBar style="light" />
-    <AuthContextProvider>
-      <Root />
-    </AuthContextProvider>
-  </>
+      <StatusBar style="light" />
+      <AuthContextProvider>
+        <Root />
+      </AuthContextProvider>
+    </>
   );
 }
-
 
