@@ -5,65 +5,61 @@ import Button from '../ui/Button';
 import Input from './Input';
 
 function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
-  const [fname , setFname] = useState('');
-  const [lname , setLname] = useState('');
-  const [email , setEmail] = useState('');
-  const [phonenum , setPhoneNum] = useState('');
-  const [username , setUserName] = useState('');
-  const [password, setPassword] = useState('');
-
-  /*const [enteredEmail, setEnteredEmail] = useState('');
-  const [enteredConfirmEmail, setEnteredConfirmEmail] = useState('');
+  //set local state  
+  const [enteredFirstName, setEnteredFirstName] = useState('');
+  const [enteredLastName, setEnteredLastName] = useState('');
+  const [enteredEmail, setEnteredEmail] = useState('');
+  const [enteredPhone, setEnteredPhone] = useState('');
+  const [enteredUserName, setEnteredUserName] = useState('');
   const [enteredPassword, setEnteredPassword] = useState('');
-  const [enteredConfirmPassword, setEnteredConfirmPassword] = useState('');*/
+  const [enteredConfirmedPassword, setEnteredConfirmedPassword] = useState('');
 
-  /*const {
+  const {
+    fname: fnameIsInvalid,
+    lname: lnameIsInvalid,
     email: emailIsInvalid,
-    confirmEmail: emailsDontMatch,
+    phone: phoneIsInvalid,
+    user:  userIsInvalid,
     password: passwordIsInvalid,
-   confirmPassword: passwordsDontMatch,
-  } = credentialsInvalid;*/
+    confirmPassword: passwordsDontMatch,
+  } = credentialsInvalid;
 
   function updateInputValueHandler(inputType, enteredValue) {
     switch (inputType) {
-      case 'checkfirstname':
-        setFname(enteredValue);
-        break;
-      case'lastname':
-      setLname(enteredValue);
-      break;
-     case 'Email':
-        setEmail(enteredValue);
-        break;
-      case 'phonenum':
-          setPhoneNum(enteredValue);
-          break;
-      case 'username':
-          setUserName(enteredValue);
-          break;
-
-      /*case 'confirmEmail':
-        setEnteredConfirmEmail(enteredValue);
-        break;*/
-      case 'password':
-        setPassword(enteredValue);
-        break;
-      /*case 'confirmPassword':
-        setEnteredConfirmPassword(enteredValue);
-        break;*/
+        case 'fname':
+            setEnteredFirstName(enteredValue);
+            break;
+        case 'lname':
+            setEnteredLastName(enteredValue);
+            break;
+        case 'email':
+            setEnteredEmail(enteredValue);
+            break;
+        case 'phone':
+            setEnteredPhone(enteredValue);  
+            break;
+        case 'user':
+            setEnteredUserName(enteredValue);
+            break;
+        case 'password':
+            setEnteredPassword(enteredValue);
+            break;
+        case 'confirmPassword':
+            setEnteredConfirmedPassword(enteredValue);
+            break;
     }
   }
+
   function submitHandler() {
     onSubmit({
-      fname: fname,
-      lname: lname,
-      email: email,
-      phonenum: phonenum,
-      //confirmEmail: enteredConfirmEmail,
-      username: username,
-      password: password,
-      //confirmPassword: enteredConfirmPassword,
-    });
+        fname: enteredFirstName,
+        lname: enteredLastName, 
+        email: enteredEmail, 
+        phone: enteredPhone, 
+        user:  enteredUserName, 
+        password: enteredPassword,
+        confirmPassword: enteredConfirmedPassword,
+});
   }
 
   return (
@@ -71,62 +67,72 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
     <ScrollView>
       <View>
       {!isLogin && (
-          <Input
-            label="First Name"
-            onUpdateValue={updateInputValueHandler.bind(this, 'checkfirstname')}
-            value={fname}
-            keyboardType="text"
-            //isInvalid={emailsDontMatch}
-          />
-        )}
-        {!isLogin && (
+        <Input
+          label="First Name"
+          onUpdateValue={updateInputValueHandler.bind(this, 'fname')}
+          value={enteredFirstName}
+          keyboardType="default"
+          isInvalid={fnameIsInvalid}
+        />
+
+      )}
+        
+         {!isLogin && (
           <Input
             label="Last Name"
-            onUpdateValue={updateInputValueHandler.bind(this, 'lastname')}
-            value={lname}
-            keyboardType="email-address"
-            //isInvalid={emailsDontMatch}
+            onUpdateValue={updateInputValueHandler.bind(this, 'lname')}
+            value={enteredLastName}
+            keyboardType="default"
+            isInvalid={lnameIsInvalid}
           />
         )}
         {!isLogin && (
           <Input
-            label="Email"
-            onUpdateValue={updateInputValueHandler.bind(this, 'Email')}
-            value={email}
+            label="Email Address"
+            onUpdateValue={updateInputValueHandler.bind(this, 'email')}
+            value={enteredEmail}
             keyboardType="email-address"
-            //isInvalid={emailsDontMatch}
+            isInvalid={emailIsInvalid}
           />
         )}
         {!isLogin && (
           <Input
             label="Phone"
-            onUpdateValue={updateInputValueHandler.bind(this, 'phonenum')}
-            value={phonenum}
-            keyboardType="text"
-            //isInvalid={emailsDontMatch}
+            onUpdateValue={updateInputValueHandler.bind(this, 'phone')}
+            value={enteredPhone}
+            keyboardType="numeric"
+            isInvalid={phoneIsInvalid}
           />
         )}
-       
         <Input
-          label="Username"
-          onUpdateValue={updateInputValueHandler.bind(this, 'username')}
-          value={username}
-          keyboardType="text"
-          //isInvalid={emailIsInvalid}
+          label="User Name"
+          onUpdateValue={updateInputValueHandler.bind(this, 'user')}
+          keyboardType="default"
+          value={enteredUserName}
+          isInvalid={userIsInvalid}
         />
-        
-        
         <Input
           label="Password"
           onUpdateValue={updateInputValueHandler.bind(this, 'password')}
           secure
-          value={password}
-          //isInvalid={passwordIsInvalid}
+          value={enteredPassword}
+          isInvalid={passwordIsInvalid}
         />
-       
+        {!isLogin && (
+          <Input
+            label="Confirm Password"
+            onUpdateValue={updateInputValueHandler.bind(
+              this,
+              'confirmPassword'
+            )}
+            secure
+            value={enteredConfirmedPassword}
+            isInvalid={passwordsDontMatch}
+          />
+        )}
         <View style={styles.buttons}>
           <Button onPress={submitHandler}>
-            {isLogin ? 'Log In' : 'Sign Up'}
+            {isLogin ? 'Log In' : 'Register'}
           </Button>
         </View>
       </View>
