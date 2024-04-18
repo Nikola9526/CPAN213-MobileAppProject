@@ -10,46 +10,63 @@ function AuthContent({ isLogin, onAuthenticate }) {
   const navigation = useNavigation();
 
   const [credentialsInvalid, setCredentialsInvalid] = useState({
-   // email: false,
-    password: false,
-   
-    
+    user: false,              // login & register
+    password: false,          // login & register
+    confirmPassword: false,   // register only
+    lastName: false,          // register only
+    firstName: false,         // register only
+    phone: false,             // register only
+    email: false,             // register only
   });
 
   function switchAuthModeHandler() {
     if (isLogin) {
-      navigation.replace('Signup');
+      navigation.replace('Register');
     } else {
       navigation.replace('Login');
     }
-  }
+  } 
 
   function submitHandler(credentials) {
-    let { password } = credentials;
+    let { user, password, confirmPassword, lname, fname, phone, email } = credentials;
 
-    //email = email.trim();
+    user = user.trim();
     password = password.trim();
+    if (!isLogin) {
+      confirmPassword = confirmPassword?.trim();
+      fname = fname?.trim();
+      lname = lname?.trim();
+      email = email?.trim();
+      phone = phone?.trim();
 
-    //const emailIsValid = email.includes('@');
+    }
     const passwordIsValid = password.length > 6;
-    //const emailsAreEqual = email === confirmEmail;
-    //const passwordsAreEqual = password === confirmPassword;
+    const userIsValid = user.length>0;
+    const phoneIsValid = phone.length>0;
+    const emailIsValid = email.includes('@');
+    const passwordsAreEqual = password === confirmPassword;
+    const fnameIsValid = fname.length>0;
+    const lnameIsValid = lname.length>0;
+    
 
     if (
-      /*!emailIsValid ||*/
+      !userIsValid ||
       !passwordIsValid ||
-      (!isLogin )
+      (!isLogin && !(fnameIsValid && lnameIsValid && emailIsValid && phoneIsValid && passwordsAreEqual))
     ) {
-      Alert.alert('Invalid input'," som" );
+      Alert.alert('Invalid input', 'Please check your entered credentials.');
       setCredentialsInvalid({
-        //email: !emailIsValid,
-       //confirmEmail: !emailIsValid ,
+        user: !userIsValid,
         password: !passwordIsValid,
-       // confirmPassword: !passwordIsValid,
+        confirmPassword:!passwordsAreEqual,
+        fname: !fnameIsValid,
+        lname: !lnameIsValid,
+        email: !emailIsValid,
+        phone: !phoneIsValid,
       });
       return;
     }
-    onAuthenticate({  password });
+    onAuthenticate({ fname,lname, email, phone, user, password, confirmPassword });
   }
 
   return (
@@ -61,7 +78,7 @@ function AuthContent({ isLogin, onAuthenticate }) {
       />
       <View style={styles.buttons}>
         <FlatButton onPress={switchAuthModeHandler}>
-          {isLogin ? 'Create a new user' : 'Log in instead'}
+          {isLogin ? 'Register' : 'Log in'}
         </FlatButton>
       </View>
     </View>
@@ -87,3 +104,4 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 });
+// + password + confirmPassword
