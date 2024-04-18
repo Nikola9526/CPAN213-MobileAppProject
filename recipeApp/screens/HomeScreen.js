@@ -32,9 +32,20 @@ import LoginScreen from './LoginScreen';
     <Text style={styles.itemText}>Ingredients:</Text>
     <FlatList
     data={item.ingredients} 
-    renderItem={({ itemI }) => <Text style={styles.itemText}>- {itemI}</Text> }
-    keyExtractor={(itemI,indexI) => indexI.toString()}
+    renderItem={({ item }) => <Text style={styles.itemText}>- {item}</Text> }
+    keyExtractor={(item,index) => index.toString()}
     />
+     <Text style={styles.itemText}>Directions:</Text>
+     <FlatList
+    data={item.directions} 
+    renderItem={({ item }) => <Text style={styles.itemText}>- {item}</Text> }
+    keyExtractor={(item,index) => index.toString()}
+    />
+    <Text style={styles.itemText}>Note: {item.note}</Text>
+    <Text style={styles.itemText}>Posted By: {item.user.username}</Text>
+    
+   
+
     
 
     
@@ -74,7 +85,7 @@ function WelcomeScreen({navigation}) {
         style={styles.employeeList}
        data={recipes}
        renderItem={renderRecipe} 
-       keyExtractor={(item) => item.toString()}
+       keyExtractor={(itemre) => itemre.toString()}
     />
       
       <Text></Text>
