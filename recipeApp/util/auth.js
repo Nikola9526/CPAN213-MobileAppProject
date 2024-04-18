@@ -1,52 +1,33 @@
 import axios from 'axios';
 
-//const API_KEY = 'AIzaSyDCYasArcOwcALFhIj2szug5aD2PgUQu1E';
-
-async function authenticate(mode, email, password) {
-  const url = `http://10.0.2.2:9001/api/users/${mode}`;
-
-  /* 
-  http://10.0.2.2:9001/api/users/login 
-  /api/users/register
-  */
-
-  const response = await axios.post(url, {
-    email: email,
-    password: password,
-    returnSecureToken: true,
-  });
-
-  const token = response.token;
-
-  return token;
-}
-
-export  async function createUser(fname,lname, email,phonenum,username, password) {
+export  async function registerUser(fname,lname, email, phone, user, password) {
   const url = 'http://10.0.2.2:9001/api/users/register';
+  
   const response = await axios.post(url, {
     fname: fname,
     lname: lname,
     email: email,
-    phonenum: phonenum,
-    username: username,
+    phonenum: phone,
+    username: user,
     password: password,
     returnSecureToken: true,
   });
-  const token = response.token;
-
-  //return authenticate('register', email, password);
+  //const token = response.data.token;
+  //console.log(token)
+  
+  //return token;
 }
 
-export async function login(username, password) {
+export async function login(user, password) {
   const url = 'http://10.0.2.2:9001/api/users/login';
+  console.log('Making Call')
   const response = await axios.post(url, {
-   
-    username: username,
+    username: user,
     password: password,
     returnSecureToken: true,
   });
-  const token = response.token;
+  const myToken = response.data.token;
+  
+  return myToken;
 
-
-  return authenticate('login', email, password);
 }
